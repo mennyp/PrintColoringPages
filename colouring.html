@@ -1,0 +1,153 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd"> 
+<html>
+    <head> 
+        <meta http-equiv="content-type" content="text/html; charset=utf-8"> 
+        <title>printPage app</title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+        <script type="text/javascript">
+            // http://www.codescratcher.com/javascript/print-image-using-javascript/
+            function ImageSourcetoPrint(source) {
+                return  "<html><head>" +
+                        "<style>img{max-height:900px;max-width:800px;height:auto;width:auto;}</style>" +
+                        "<script>function step1(){" +
+                        "setTimeout('step2()', 1000);}" +
+                        "function step2(){window.print();}" +
+                        "</scri" + "pt></head><body onload='step1()'>" +
+                        "<img src='" + source + "' /></body></html>";
+            }
+            function ImagePrint(source) {
+                Pagelink = "about:blank";
+                var pwa = window.open(Pagelink, "_new");
+                pwa.document.open();
+                pwa.document.write(ImageSourcetoPrint(source));
+                pwa.document.close();
+            }
+            var bing_key = "3e160d63ee4f4a2ea54f4dd0eedbbaf3";
+            var start = 0;
+            var offset = 18;
+            function searchFromBing(from, to, query, picSize) {
+                // BING implementation
+                // https://azure.microsoft.com/en-us/try/cognitive-services/
+
+                var bing_url = "https://api.cognitive.microsoft.com/bing/v7.0/images/search?" +
+                    "safeSearch=Strict" +
+                    "&Color=Monochrome" +
+                    "&size=" + picSize +
+                    "&count=" + to +
+                    "&offset=" + from +
+                    "&q=" + query;
+                console.log(bing_url);
+                $.ajax({
+                    url: bing_url,
+                    headers: {
+                        "Ocp-Apim-Subscription-Key": bing_key
+                    },
+                    async: true,
+                    success: function(result){
+                        var id = 1;
+                        $.each(result.value, function(index, item) {
+                            if (index % 6 == 0) {
+                                id = id + 1;
+                                $('#result').append('<div class="row" id="' + id + '"></div>');
+                            }
+                            $('#' + id).append('<div class="col-md-2"><p>\'' + item.name + ' | ' + item.encodingFormat + ' | ' + sizeToText(parseInt(item.contentSize.split('B')[0])) + '\'</p><a href="#" onclick="ImagePrint(\'' + item.contentUrl + '\'); return false;"><img src="' + item.thumbnailUrl + '"/></a></div>');
+                        });
+                    }
+                });
+            }
+
+            function sizeToText(contentSize) {
+                if(contentSize < 10000){
+                   return 'low';
+                }
+                else if(contentSize < 50000){
+                    return 'med-low';
+                }
+                else if(contentSize < 100000){
+                    return 'med';
+                }
+                else if(contentSize < 200000){
+                    return 'high';
+                }
+                else {
+                    return 'very-high';
+                }
+            }
+
+            function searchFromGoogle(from, to, query, size) {
+                // GOOGLE implementation
+                // https://developers.google.com/custom-search/json-api/v1/overview
+                // var cx = "YOUR_GOOGLE_SEARCH_ENGINE_ID";
+                // var key = "YOUR_GOOGLE_API_KEY";
+                // var rowSize = 10;
+                // for(var start = 1; start < 100; start = start + rowSize) {
+                //     var url = "https://www.googleapis.com/customsearch/v1" +
+                //         "?q=" + query +
+                //         "&cx=" + cx +
+                //         "&key=" + key +
+                //         "&start=" + start +
+                //         "&num=" + rowSize +
+                //         "&imgColorType=gray&imgSize=large&searchType=image&safe=high";
+                //     console.log(url);
+                //     $.ajax({
+                //         url: url,
+                //         async: true,
+                //         success: function(result){
+                //             var id = "result" + result.queries.request[0].startIndex;
+                //             $('#result').append('<div class="row" id="' + id + '"></div>')
+                //             $.each(result.items, function(index, item) {
+                //                 $('#' + id).append('<div class="col-md-1"><a href="#" onclick="ImagePrint(\'' + item.link + '\'); return false;"><img src="' + item.image.thumbnailLink + '"/></a></div>');
+                //             });
+                //         }
+                //     });
+                // }
+            }
+        </script>
+        <script>
+        $(document).ready(function(){
+            $("#nextBtn").hide();
+            $("#searchBtn").click(function(){
+                start = 0;
+                var query = $("#search").val();
+                $("#result").html("לחץ על תמונה להדפסה");
+                $("#nextBtn").show();
+                var picSize = $("input[name='picSize']:checked").val();
+                searchFromBing(start, offset, query, picSize);
+            });
+            $("#nextBtn").click(function(){
+                start += offset;
+                var query = $("#search").val();
+                $("#result").html("לחץ על תמונה להדפסה");
+                $("#nextBtn").show();
+                var picSize = $("input[name='picSize']:checked").val();
+                searchFromBing(start, offset, query, picSize);
+            });
+            $("#search").val("bob sponge");
+        });
+        </script>
+        <style>
+            img {
+                max-width:  200px;
+                height:     auto;
+                width:      auto;
+            }
+        </style>
+    </head> 
+    <body style="direction: rtl; margin: 5px; horiz-align: center; text-align: center">
+        <h1>חפש דפי צביעה להדפסה</h1>
+        <input id="search" type="text"/>
+        <button id="searchBtn">חפש</button>
+        <button id="nextBtn">הבא</button>
+        <p>
+            <label><input type="radio" name="picSize" value="Small" >קטן</label>
+            <label><input type="radio" name="picSize" value="Medium">בינוני</label>
+            <label><input type="radio" name="picSize" value="Large" checked="checked">גדול</label>
+            <label><input type="radio" name="picSize" value="Wallpaper">ענק</label>
+            <label><input type="radio" name="picSize" value="All">הכל</label>
+        </p>
+        <div id="result" class="row">תוצאות יוצגו כאן</div>
+    </body> 
+</html>
