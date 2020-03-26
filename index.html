@@ -27,7 +27,7 @@
             }
             var bing_key = "3e160d63ee4f4a2ea54f4dd0eedbbaf3";
             var start = 0;
-            var offset = 18;
+            var offset = 10;
             function searchFromBing(from, to, query, picSize) {
                 // BING implementation
                 // https://azure.microsoft.com/en-us/try/cognitive-services/
@@ -49,7 +49,7 @@
                     success: function(result){
                         var id = 1;
                         $.each(result.value, function(index, item) {
-                            if (index % 6 == 0) {
+                            if (index % 5 == 0) {
                                 id = id + 1;
                                 $('#result').append('<div class="row" id="' + id + '"></div>');
                             }
