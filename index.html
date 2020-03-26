@@ -31,7 +31,7 @@
             }
             var bing_key = "3e160d63ee4f4a2ea54f4dd0eedbbaf3";
             var start = 0;
-            var offset = 6;
+            var offset = 10;
             function searchFromBing(from, to, query, picSize, callback) {
                 // BING implementation
                 // https://azure.microsoft.com/en-us/try/cognitive-services/
@@ -174,7 +174,7 @@
                 border: 1px solid black;
             }
             img {
-                max-width:  250px;
+                max-width:  150px;
                 height:     auto;
                 width:      auto;
             }
@@ -182,8 +182,9 @@
                 position: fixed;
                 z-index: -1;
                 bottom: 10px;
+                left: 10px;
                 padding-top: 10px;
-                width: 100%;
+                width: 200px;
                 box-shadow: 0px 0px 25px rgb(207, 207, 207);
                 background: #F3F3F3;
             }
@@ -195,7 +196,6 @@
                 text-align: center;
                 font: 25px Georgia, "Times New Roman", Times, serif;
                 font-size: 14px;
-                width:300px;
             }
             .foot {
                 display:inline;
@@ -209,33 +209,28 @@
         </style>
     </head>
     <div class="content" style="position: absolute; right: 0px">בס"ד</div>
-    <body style="direction: rtl; margin: 5px; horiz-align: center; text-align: center">
-
-        <h1>אתר לחיפוש דפי צביעה להדפסה</h1>
-        <div style="width: 100%; display: table;">
-            <div style="display: table-row">
-                <div style="width: 50%; display: table-cell; text-align: left">
-                    <H4>חיפוש:</H4>
-                    <input id="search" type="text" style="text-align: center"/>
-                    <button id="searchBtn">חפש</button>
-
-                </div>
-                <div style="display: table-cell; text-align: right; padding-right: 20px">
-                <p>
-                <H4>גודל:</H4>
-                    <span><input type="radio" name="picSize" value="Small" >קטן</span>
-                    <span><input type="radio" name="picSize" value="Medium">בינוני</span>
-                    <span><input type="radio" name="picSize" value="Large" checked="checked">גדול</span>
-                    <span><input type="radio" name="picSize" value="Wallpaper">פוסטר</span>
-                    <span><input type="radio" name="picSize" value="All">הכל</span>
+    <body style="direction: rtl; display: flex; min-height: 100vh; flex-direction: column;">
+        <div style="text-align: center">
+            <h1>אתר לחיפוש דפי צביעה להדפסה</h1>
+        </div>
+        <div style="width: 100%; display: flex; height: 30px; align-content: center; justify-content: center">
+            <div style="display: flex; flex-direction: row; align-content: center" >
+                <H4 style="margin:5px">חיפוש:</H4>
+                <input id="search" type="text" style="text-align: center"/>
+                <button id="searchBtn">חפש</button>
+                <H4 style="margin:5px 40px 5px 0px">גודל:</H4>
+                <p style="margin: 5px">
+                <input type="radio" name="picSize" value="Small" >קטן</input>
+                <input type="radio" name="picSize" value="Medium">בינוני</input>
+                <input type="radio" name="picSize" value="Large" checked="checked">גדול</input>
+                <input type="radio" name="picSize" value="Wallpaper">פוסטר</input>
+                <input type="radio" name="picSize" value="All">הכל</input>
                 </p>
-                </div>
             </div>
-
-    </div>
-        <div id="result" class="row" >תוצאות יוצגו כאן</div>
-        <div style="width: 100%; display: table;">
-            <div style="display: table-row">
+        </div>
+        <div style="width: 100%; margin-top: 20px; display: flex; overflow: scroll; flex-direction: column; justify-content: center; horiz-align: center">
+            <div id="result" style="text-align: center;">תוצאות יוצגו כאן</div>
+            <div style="display: flex; flex-direction: row;justify-content: center;">
                 <span id="totalSpan" style="margin: 5px"></span>
                 <button id="prevBtn">הקודם</button>
                 <span id="currentPosSpan" style="margin: 5px"></span>
