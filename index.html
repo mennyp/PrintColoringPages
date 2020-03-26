@@ -32,7 +32,7 @@
             var bing_key = "3e160d63ee4f4a2ea54f4dd0eedbbaf3";
             var start = 0;
             var offset = 6;
-            function searchFromBing(from, to, query, picSize) {
+            function searchFromBing(from, to, query, picSize, callback) {
                 // BING implementation
                 // https://azure.microsoft.com/en-us/try/cognitive-services/
 
@@ -51,6 +51,7 @@
                     },
                     async: true,
                     success: function(result){
+                        console.log(result);
                         var id = 1;
                         $.each(result.value, function(index, item) {
                             if (index % 6 == 0) {
@@ -59,6 +60,13 @@
                             }
                             addItemToPage(id, item.name, item.encodingFormat, sizeToText(parseInt(item.contentSize.split('B')[0])), item.contentUrl, item.thumbnailUrl);
                         });
+                        var res = {
+                            total: result.totalEstimatedMatches,
+                            nextOffset: result.nextOffset,
+                            currentOffset: result.currentOffset
+                        };
+                        if (callback)
+                            callback(res);
                     }
                 });
             }
@@ -99,6 +107,7 @@
                      url: url,
                      async: true,
                      success: function(result){
+                         console.log(result);
                          var id = "result" + result.queries.request[0].startIndex;
                          $('#result').append('<div class="row" id="' + id + '"></div>')
                          $.each(result.items, function(index, item) {
@@ -109,25 +118,53 @@
                      }
                  });
             }
+
+            function handleResult(res) {
+                console.log(res);
+                if (res) {
+                    $("#totalSpan").show();
+                    $("#totalSpan").html('סה\"כ: ' + res.total + ' תוצאות.');
+                    if (res.currentOffset == 0) {
+                        $("#prevBtn").hide();
+                    } else {
+                        $("#prevBtn").show();
+                    }
+                    $("#currentPosSpan").show();
+                    $("#currentPosSpan").html('דף ' + (start + offset) / offset);
+                    if (res.nextOffset == res.total) {
+                        $("#nextBtn").hide();
+                    } else {
+                        $("#nextBtn").show();
+                    }
+                }
+            }
         </script>
         <script>
         $(document).ready(function(){
+            $("#totalSpan").hide();
+            $("#prevBtn").hide();
+            $("#currentPosSpan").hide();
             $("#nextBtn").hide();
             $("#searchBtn").click(function(){
                 start = 0;
                 var query = $("#search").val();
                 $("#result").html("לחץ על תמונה להדפסה");
-                $("#nextBtn").show();
                 var picSize = $("input[name='picSize']:checked").val();
-                searchFromBing(start, offset, query, picSize);
+                searchFromBing(start, offset, query, picSize, handleResult);
             });
             $("#nextBtn").click(function(){
                 start += offset;
-                var query = $("#search").val();
                 $("#result").html("לחץ על תמונה להדפסה");
-                $("#nextBtn").show();
+                var query = $("#search").val();
                 var picSize = $("input[name='picSize']:checked").val();
-                searchFromBing(start, offset, query, picSize);
+                searchFromBing(start, offset, query, picSize, handleResult);
+            });
+            $("#prevBtn").click(function(){
+                start -= offset;
+                $("#result").html("לחץ על תמונה להדפסה");
+                var query = $("#search").val();
+                var picSize = $("input[name='picSize']:checked").val();
+                searchFromBing(start, offset, query, picSize, handleResult);
             });
             $("#search").val("פסח");
         });
@@ -143,6 +180,7 @@
             }
             .siteFooterBar {
                 position: fixed;
+                z-index: -1;
                 bottom: 10px;
                 padding-top: 10px;
                 width: 100%;
@@ -180,12 +218,12 @@
                     <H4>חיפוש:</H4>
                     <input id="search" type="text" style="text-align: center"/>
                     <button id="searchBtn">חפש</button>
-                    <button id="nextBtn">הבא</button>
+
                 </div>
                 <div style="display: table-cell; text-align: right; padding-right: 20px">
                 <p>
-                <H4>איכות:</H4>
-                    <span><input type="radio" name="picSize" value="Small" >נמוך</span>
+                <H4>גודל:</H4>
+                    <span><input type="radio" name="picSize" value="Small" >קטן</span>
                     <span><input type="radio" name="picSize" value="Medium">בינוני</span>
                     <span><input type="radio" name="picSize" value="Large" checked="checked">גדול</span>
                     <span><input type="radio" name="picSize" value="Wallpaper">פוסטר</span>
@@ -196,7 +234,14 @@
 
     </div>
         <div id="result" class="row" >תוצאות יוצגו כאן</div>
-
+        <div style="width: 100%; display: table;">
+            <div style="display: table-row">
+                <span id="totalSpan" style="margin: 5px"></span>
+                <button id="prevBtn">הקודם</button>
+                <span id="currentPosSpan" style="margin: 5px"></span>
+                <button id="nextBtn">הבא</button>
+            </div>
+        </div>
         <div class="siteFooterBar">
             <div class="content">
                 <!--<img src="http://i.imgur.com/nuRmQJX.png" >-->
