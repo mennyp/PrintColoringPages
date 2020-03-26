@@ -56,7 +56,7 @@
                         $.each(result.value, function(index, item) {
                             if (index % 6 == 0) {
                                 id = id + 1;
-                                $('#result').append('<div class="row" id="' + id + '"></div>');
+                                $('#result').append('<div id="' + id + '"></div>');
                             }
                             addItemToPage(id, item.name, item.encodingFormat, sizeToText(parseInt(item.contentSize.split('B')[0])), item.contentUrl, item.thumbnailUrl);
                         });
@@ -123,18 +123,26 @@
                 console.log(res);
                 if (res) {
                     $("#totalSpan").show();
-                    $("#totalSpan").html('סה\"כ: ' + res.total + ' תוצאות.');
-                    if (res.currentOffset == 0) {
-                        $("#prevBtn").hide();
-                    } else {
-                        $("#prevBtn").show();
+                    if (res.total) {
+                        $("#totalSpan").html('סה\"כ: ' + res.total + ' תוצאות.');
+                        if (res.currentOffset == 0) {
+                            $("#prevBtn").hide();
+                        } else {
+                            $("#prevBtn").show();
+                        }
+                        $("#currentPosSpan").show();
+                        $("#currentPosSpan").html('דף ' + (start + offset) / offset);
+                        if (res.nextOffset == res.total) {
+                            $("#nextBtn").hide();
+                        } else {
+                            $("#nextBtn").show();
+                        }
                     }
-                    $("#currentPosSpan").show();
-                    $("#currentPosSpan").html('דף ' + (start + offset) / offset);
-                    if (res.nextOffset == res.total) {
+                    else {
+                        $("#totalSpan").html('אין תוצאות.');
+                        $("#currentPosSpan").hide();
+                        $("#prevBtn").hide();
                         $("#nextBtn").hide();
-                    } else {
-                        $("#nextBtn").show();
                     }
                 }
             }
@@ -171,7 +179,7 @@
         </script>
         <style>
             .col-md-2{
-                border: 1px solid black;
+                border: 1px solid #9B9B9B;
             }
             img {
                 max-width:  150px;
@@ -180,7 +188,7 @@
             }
             .siteFooterBar {
                 position: fixed;
-                z-index: -1;
+                z-index: 22;
                 bottom: 10px;
                 left: 10px;
                 padding-top: 10px;
@@ -228,9 +236,9 @@
                 </p>
             </div>
         </div>
-        <div style="width: 100%; margin-top: 20px; display: flex; overflow: scroll; flex-direction: column; justify-content: center; horiz-align: center">
-            <div id="result" style="text-align: center;">תוצאות יוצגו כאן</div>
-            <div style="display: flex; flex-direction: row;justify-content: center;">
+        <div style="width: 100%; margin-top: 20px; display: flex; flex-direction: column; justify-content: center; horiz-align: center;">
+            <div id="result" style="text-align: center;overflow: auto">תוצאות יוצגו כאן</div>
+            <div style="display: flex; flex-direction: row;justify-content: center; margin-top: 10px;">
                 <span id="totalSpan" style="margin: 5px"></span>
                 <button id="prevBtn">הקודם</button>
                 <span id="currentPosSpan" style="margin: 5px"></span>
