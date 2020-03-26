@@ -8,7 +8,6 @@
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
         <script type="text/javascript">
-            // http://www.codescratcher.com/javascript/print-image-using-javascript/
             function ImageSourcetoPrint(source) {
                 return  "<html><head>" +
                         "<style>img{max-height:900px;max-width:800px;height:auto;width:auto;}</style>" +
@@ -24,6 +23,11 @@
                 pwa.document.open();
                 pwa.document.write(ImageSourcetoPrint(source));
                 pwa.document.close();
+            }
+            function addItemToPage(id, name, encodingFormat, contentSize, contentUrl, thumbnailUrl) {
+                $('#' + id).append('<div class="col-md-2"><p>\'' + name + ' | ' + encodingFormat + ' | ' +
+                    contentSize + '\'</p><a href="#" onclick="ImagePrint(\'' +
+                    contentUrl + '\'); return false;"><img src="' + thumbnailUrl + '"/></a></div>');
             }
             var bing_key = "3e160d63ee4f4a2ea54f4dd0eedbbaf3";
             var start = 0;
@@ -53,9 +57,7 @@
                                 id = id + 1;
                                 $('#result').append('<div class="row" id="' + id + '"></div>');
                             }
-                            $('#' + id).append('<div class="col-md-2"><p>\'' + item.name + ' | ' + item.encodingFormat + ' | ' +
-                                sizeToText(parseInt(item.contentSize.split('B')[0])) + '\'</p><a href="#" onclick="ImagePrint(\'' +
-                                item.contentUrl + '\'); return false;"><img src="' + item.thumbnailUrl + '"/></a></div>');
+                            addItemToPage(id, item.name, item.encodingFormat, sizeToText(parseInt(item.contentSize.split('B')[0])), item.contentUrl, item.thumbnailUrl);
                         });
                     }
                 });
@@ -79,33 +81,33 @@
                 }
             }
 
-            function searchFromGoogle(from, to, query, size) {
+            function searchFromGoogle(from, rowSize, query, picSize) {
                 // GOOGLE implementation
                 // https://developers.google.com/custom-search/json-api/v1/overview
-                // var cx = "YOUR_GOOGLE_SEARCH_ENGINE_ID";
-                // var key = "YOUR_GOOGLE_API_KEY";
-                // var rowSize = 10;
-                // for(var start = 1; start < 100; start = start + rowSize) {
-                //     var url = "https://www.googleapis.com/customsearch/v1" +
-                //         "?q=" + query +
-                //         "&cx=" + cx +
-                //         "&key=" + key +
-                //         "&start=" + start +
-                //         "&num=" + rowSize +
-                //         "&imgColorType=gray&imgSize=large&searchType=image&safe=high";
-                //     console.log(url);
-                //     $.ajax({
-                //         url: url,
-                //         async: true,
-                //         success: function(result){
-                //             var id = "result" + result.queries.request[0].startIndex;
-                //             $('#result').append('<div class="row" id="' + id + '"></div>')
-                //             $.each(result.items, function(index, item) {
-                //                 $('#' + id).append('<div class="col-md-1"><a href="#" onclick="ImagePrint(\'' + item.link + '\'); return false;"><img src="' + item.image.thumbnailLink + '"/></a></div>');
-                //             });
-                //         }
-                //     });
-                // }
+                //imgSize: icon, small, medium, large, xlarge, xxlarge, or huge.
+                var cx = "012799103566678627508:cbss51dvbjh";
+                 var key = "AIzaSyD2ACDPxA-6qMy11WnUFuVCebjd8PU2IEs";
+                 var url = "https://www.googleapis.com/customsearch/v1" +
+                     "?q=" + query +
+                     "&cx=" + cx +
+                     "&key=" + key +
+                     "&start=" + from +
+                     "&num=" + rowSize +
+                     "&imgColorType=gray&imgType=lineart&imgSize=" + picSize.toLowerCase() + "&searchType=image&safe=high";
+                 console.log(url);
+                 $.ajax({
+                     url: url,
+                     async: true,
+                     success: function(result){
+                         var id = "result" + result.queries.request[0].startIndex;
+                         $('#result').append('<div class="row" id="' + id + '"></div>')
+                         $.each(result.items, function(index, item) {
+                             //$('#' + id).append('<div class="col-md-1"><a href="#" onclick="ImagePrint(\'' +
+                               //  item.link + '\'); return false;"><img src="' + item.image.thumbnailLink + '"/></a></div>');
+                             addItemToPage(id, item.title, item.fileFormat, sizeToText(parseInt(item.image.byteSize)), item.link, item.image.thumbnailLink);
+                         });
+                     }
+                 });
             }
         </script>
         <script>
@@ -141,12 +143,10 @@
             }
             .siteFooterBar {
                 position: fixed;
-                bottom: 0;
+                bottom: 10px;
                 padding-top: 10px;
                 width: 100%;
                 box-shadow: 0px 0px 25px rgb(207, 207, 207);
-                height: 60px;
-
                 background: #F3F3F3;
             }
 
@@ -173,7 +173,7 @@
     <div class="content" style="position: absolute; right: 0px">בס"ד</div>
     <body style="direction: rtl; margin: 5px; horiz-align: center; text-align: center">
 
-        <h1>חפש דפי צביעה להדפסה</h1>
+        <h1>אתר לחיפוש דפי צביעה להדפסה</h1>
         <div style="width: 100%; display: table;">
             <div style="display: table-row">
                 <div style="width: 50%; display: table-cell; text-align: left">
@@ -200,7 +200,8 @@
         <div class="siteFooterBar">
             <div class="content">
                 <!--<img src="http://i.imgur.com/nuRmQJX.png" >-->
-                <div class="foot">בשורות טובות! ממשפחת פנחסוב.</div>
+                <div >בשורות טובות! ממשפחת פנחסוב.</div>
+                <div >להצעות ייעול מוזמנים לשלוח מייל ל - mpinhaso@gmail.com</div>
             </div>
         </div>
     </body> 
