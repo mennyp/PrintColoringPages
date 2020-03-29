@@ -27,7 +27,7 @@
             function addItemToPage(id, name, encodingFormat, contentSize, contentUrl, thumbnailUrl) {
                 $('#' + id).append('<div class="col-md-2"><p>\'' + name + ' | ' + encodingFormat + ' | ' +
                     contentSize + '\'</p><a href="#" onclick="ImagePrint(\'' +
-                    contentUrl + '\'); return false;"><img src="' + thumbnailUrl + '"/></a></div>');
+                    contentUrl + '\'); return false;"><img class="img-thumbnail" src="' + thumbnailUrl + '"/></a></div>');
             }
             var bing_key = "3e160d63ee4f4a2ea54f4dd0eedbbaf3";
             var start = 0;
@@ -179,14 +179,11 @@
         </script>
         <style>
             .col-md-2{
-                border: 1px solid #9B9B9B;
-            }
-            img {
-                max-width:  150px;
-                height:     auto;
-                width:      auto;
+                margin-top: 10px;
             }
             .siteFooterBar {
+                pointer-events:none;
+                opacity: 0.5;
                 position: fixed;
                 z-index: 22;
                 bottom: 10px;
@@ -218,15 +215,15 @@
     </head>
     <div class="content" style="position: absolute; right: 0px">בס"ד</div>
     <body style="direction: rtl; display: flex; min-height: 100vh; flex-direction: column;">
-        <div style="text-align: center">
-            <h1>אתר לחיפוש דפי צביעה להדפסה</h1>
+        <div style="text-align: center; background: #45efc0;">
+            <h3>אתר לחיפוש דפי צביעה להדפסה</h3>
         </div>
-        <div style="width: 100%; display: flex; height: 30px; align-content: center; justify-content: center">
+        <div style="width: 100%; display: flex; height: 30px; align-content: center; justify-content: center; margin-top: 10px">
             <div style="display: flex; flex-direction: row; align-content: center" >
                 <H4 style="margin:5px">חיפוש:</H4>
                 <input id="search" type="text" style="text-align: center"/>
                 <button id="searchBtn">חפש</button>
-                <H4 style="margin:5px 40px 5px 0px">גודל:</H4>
+                <H4 style="margin:5px 30px 5px 0px">גודל:</H4>
                 <p style="margin: 5px">
                 <input type="radio" name="picSize" value="Small" >קטן</input>
                 <input type="radio" name="picSize" value="Medium">בינוני</input>
@@ -236,7 +233,7 @@
                 </p>
             </div>
         </div>
-        <div style="width: 100%; margin-top: 20px; display: flex; flex-direction: column; justify-content: center; horiz-align: center;">
+        <div style="width: 100%; margin-top: 10px; display: flex; flex-direction: column; justify-content: center; horiz-align: center;">
             <div id="result" style="text-align: center;overflow: auto">תוצאות יוצגו כאן</div>
             <div style="display: flex; flex-direction: row;justify-content: center; margin-top: 10px;">
                 <span id="totalSpan" style="margin: 5px"></span>
