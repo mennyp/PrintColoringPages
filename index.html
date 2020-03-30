@@ -125,11 +125,11 @@
                     $("#totalSpan").show();
                     if (res.total) {
                         $("#totalSpan").html('סה\"כ: ' + res.total + ' תוצאות.');
-                        if (res.currentOffset == 0) {
-                            $("#prevBtn").hide();
-                        } else {
-                            $("#prevBtn").show();
-                        }
+                        // if (res.currentOffset == 0) {
+                        //     $("#prevBtn").hide();
+                        // } else {
+                        //     $("#prevBtn").show();
+                        // }
                         $("#currentPosSpan").show();
                         $("#currentPosSpan").html('דף ' + (start + offset) / offset);
                         if (res.nextOffset == res.total) {
@@ -162,7 +162,7 @@
             });
             $("#nextBtn").click(function(){
                 start += offset;
-                $("#result").html("לחץ על תמונה להדפסה");
+                //$("#result").html("לחץ על תמונה להדפסה");
                 var query = $("#search").val();
                 var picSize = $("input[name='picSize']:checked").val();
                 searchFromBing(start, offset, query, picSize, handleResult);
@@ -175,6 +175,20 @@
                 searchFromBing(start, offset, query, picSize, handleResult);
             });
             $("#search").val("פסח");
+            $("#searchBtn").click();
+            $('#search').keypress(function(event){
+                var keycode = (event.keyCode ? event.keyCode : event.which);
+                if(keycode == '13'){
+                    $("#searchBtn").click();
+                }
+            });
+            setTimeout(function(){
+                $(window).on("scroll", function() {
+                    if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
+                        $("#nextBtn").click();
+                    }
+                });
+            }, 1000);
         });
         </script>
         <style>
@@ -213,33 +227,35 @@
             }
         </style>
     </head>
-    <div class="content" style="position: absolute; right: 0px">בס"ד</div>
+    <div class="content" style="position: absolute; right: 4px">בס"ד</div>
     <body style="direction: rtl; display: flex; min-height: 100vh; flex-direction: column;">
-        <div style="text-align: center; background: #45efc0;">
-            <h3>אתר לחיפוש דפי צביעה להדפסה</h3>
-        </div>
-        <div style="width: 100%; display: flex; height: 30px; align-content: center; justify-content: center; margin-top: 10px">
-            <div style="display: flex; flex-direction: row; align-content: center" >
-                <H4 style="margin:5px">חיפוש:</H4>
-                <input id="search" type="text" style="text-align: center"/>
-                <button id="searchBtn">חפש</button>
-                <H4 style="margin:5px 30px 5px 0px">גודל:</H4>
-                <p style="margin: 5px">
-                <input type="radio" name="picSize" value="Small" >קטן</input>
-                <input type="radio" name="picSize" value="Medium">בינוני</input>
-                <input type="radio" name="picSize" value="Large" checked="checked">גדול</input>
-                <input type="radio" name="picSize" value="Wallpaper">פוסטר</input>
-                <input type="radio" name="picSize" value="All">הכל</input>
-                </p>
+        <div style="text-align: center; background: #45efc0; position: fixed; height: 95px; width:100%; z-index: 80;">
+            <div  class="form-group has-search" style="display: flex; flex-direction: row; margin: 20px 5px 5px 5px">
+                <input id="search" type="text" class="form-control" placeholder="חיפוש">
+                <button id="searchBtn" class="btn btn-mdb-color btn-rounded btn-sm my-0 ml-sm-2" type="submit"><i class="glyphicon glyphicon-search"></i></button>
+            </div>
+            <div style="width: 100%; display: flex; height: 30px; align-content: center; justify-content: center; margin-top: 5px">
+                <div style="display: flex; flex-direction: row; align-content: center" >
+                    <p style="margin: 5px">
+                        <i class="glyphicon glyphicon-resize-full"></i>
+                        <input type="radio" name="picSize" value="Small" >קטן</input>
+                        <input type="radio" name="picSize" value="Medium">בינוני</input>
+                        <input type="radio" name="picSize" value="Large" checked="checked">גדול</input>
+                        <input type="radio" name="picSize" value="Wallpaper">פוסטר</input>
+                        <input type="radio" name="picSize" value="All">הכל</input>
+                    </p>
+                </div>
             </div>
         </div>
-        <div style="width: 100%; margin-top: 10px; display: flex; flex-direction: column; justify-content: center; horiz-align: center;">
-            <div id="result" style="text-align: center;overflow: auto">תוצאות יוצגו כאן</div>
+
+
+        <div style="width: 100%; overflow: auto; margin-top: 10px; display: flex; flex-direction: column; justify-content: center; horiz-align: center;">
+            <div id="result" style="text-align:center;">תוצאות יוצגו כאן</div>
             <div style="display: flex; flex-direction: row;justify-content: center; margin-top: 10px;">
                 <span id="totalSpan" style="margin: 5px"></span>
-                <button id="prevBtn">הקודם</button>
+                <button id="prevBtn"><i class="glyphicon glyphicon-chevron-right"></i></button>
                 <span id="currentPosSpan" style="margin: 5px"></span>
-                <button id="nextBtn">הבא</button>
+                <button id="nextBtn"><i class="glyphicon glyphicon-chevron-left"></i></button>
             </div>
         </div>
         <div class="siteFooterBar">
