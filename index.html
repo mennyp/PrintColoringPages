@@ -8,19 +8,38 @@
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
         <script type="text/javascript">
-            function ImageSourcetoPrint(source) {
-                return  "<html><head>" +
-                        "<style>img{max-height:900px;max-width:800px;height:auto;width:auto;}</style>" +
+            function ImageSourcetoPrint(source, title = "דפי צביעה מאת מני פנחסוב") {
+                return  "<html><head><title>" + title +
+                    "</title><link rel='stylesheet' type='text/css' href='print.css' />" +
+                        "<style>.print{\n" +
+                    "    page-break-before: always;\n" +
+                    "    page-break-after: always;\n" +
+                    "}\n" +
+                    ".print:last-child {\n" +
+                    "    page-break-after: auto;\n" +
+                    "}\n" +
+                    "@media print {\n" +
+                    "    .noPrint{display:none;}\n" +
+                    "    .noScreen{}\n" +
+                    "}\n" +
+                    "@media screen\n" +
+                    "{\n" +
+                    "    .noPrint{}\n" +
+                    "    .noScreen{display:none;}\n" +
+                    "}img{max-height:950px;max-width:1000px;height:auto;width:auto;" +
+                        "left: 0px;top: 0px;position:absolute;visibility: visible;} p {" +
+                        "page-break-before: always;}</style>" +
                         "<script>function step1(){" +
                         "setTimeout('step2()', 1000);}" +
                         "function step2(){window.print();}" +
-                        "</scri" + "pt></head><body onload='step1()'>" +
-                        "<img src='" + source + "' /></body></html>";
+                        "</scri" + "pt></head><body style='visibility: hidden' onload='step1()'>" +
+                        "<div class=\"noScreen\"><img src='" + source + "' /></div></body></html>";
             }
-            function ImagePrint(source) {
+            function ImagePrint(source, title = "") {
                 Pagelink = "about:blank";
                 var pwa = window.open(Pagelink, "_new");
                 pwa.document.open();
+                pwa.document.title = title;
                 pwa.document.write(ImageSourcetoPrint(source));
                 pwa.document.close();
             }
@@ -174,8 +193,9 @@
                 var picSize = $("input[name='picSize']:checked").val();
                 searchFromBing(start, offset, query, picSize, handleResult);
             });
-            $("#search").val("פסח");
-            $("#searchBtn").click();
+            //$("#search").val("פסח");
+            $("#search").focus();
+            //$("#searchBtn").click();
             $('#search').keypress(function(event){
                 var keycode = (event.keyCode ? event.keyCode : event.which);
                 if(keycode == '13'){
@@ -227,11 +247,12 @@
             }
         </style>
     </head>
-    <div class="content" style="position: absolute; right: 4px">בס"ד</div>
+    <div style="position: absolute; right: 4px; z-index: 200">בס"ד</div>
+    <div style="position: absolute; left: 4px; top: 2px; z-index: 200; font-size: 10px">להצעות ייעול מוזמנים לשלוח מייל ל - mpinhaso@gmail.com</div>
     <body style="direction: rtl; display: flex; min-height: 100vh; flex-direction: column;">
         <div style="text-align: center; background: #45efc0; position: fixed; height: 95px; width:100%; z-index: 80;">
             <div  class="form-group has-search" style="display: flex; flex-direction: row; margin: 20px 5px 5px 5px">
-                <input id="search" type="text" class="form-control" placeholder="חיפוש">
+                <input id="search" type="text" class="form-control" placeholder="חפש דף צביעה">
                 <button id="searchBtn" class="btn btn-mdb-color btn-rounded btn-sm my-0 ml-sm-2" type="submit"><i class="glyphicon glyphicon-search"></i></button>
             </div>
             <div style="width: 100%; display: flex; flex-direction: row; height: 30px; margin-top: 5px">
@@ -254,15 +275,15 @@
                 </div>
             </div>
         </div>
-        <div id="result" style="text-align:center; margin-top: 78px;">תוצאות יוצגו כאן</div>
+        <div id="result" style="text-align:center; margin-top: 78px; background: #aec8c7;">תוצאות יוצגו כאן</div>
 
 
-        <div class="siteFooterBar">
-            <div class="content">
-                <!--<img src="http://i.imgur.com/nuRmQJX.png" >-->
-                <div >בשורות טובות! ממשפחת פנחסוב.</div>
-                <div >להצעות ייעול מוזמנים לשלוח מייל ל - mpinhaso@gmail.com</div>
-            </div>
-        </div>
+<!--        <div class="siteFooterBar">-->
+<!--            <div class="content">-->
+<!--                &lt;!&ndash;<img src="http://i.imgur.com/nuRmQJX.png" >&ndash;&gt;-->
+<!--                <div >בשורות טובות! ממשפחת פנחסוב.</div>-->
+<!--                <div >להצעות ייעול מוזמנים לשלוח מייל ל - mpinhaso@gmail.com</div>-->
+<!--            </div>-->
+<!--        </div>-->
     </body> 
 </html>
