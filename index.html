@@ -193,8 +193,8 @@
                 var picSize = $("input[name='picSize']:checked").val();
                 searchFromBing(start, offset, query, picSize, handleResult);
             });
-            //$("#search").val("פסח");
-            $("#search").focus();
+            $("#search").val("פסח");
+            $("#search").trigger('focus');
             //$("#searchBtn").click();
             $('#search').keypress(function(event){
                 var keycode = (event.keyCode ? event.keyCode : event.which);
