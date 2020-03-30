@@ -194,8 +194,8 @@
                 searchFromBing(start, offset, query, picSize, handleResult);
             });
             $("#search").val("פסח");
+            $("#searchBtn").click();
             $("#search").trigger('focus');
-            //$("#searchBtn").click();
             $('#search').keypress(function(event){
                 var keycode = (event.keyCode ? event.keyCode : event.which);
                 if(keycode == '13'){
