@@ -48,14 +48,16 @@
                     contentSize + '\'</p><a href="#" onclick="ImagePrint(\'' +
                     contentUrl + '\'); return false;"><img class="img-thumbnail" src="' + thumbnailUrl + '"/></a></div>');
             }
-            var bing_key = "3e160d63ee4f4a2ea54f4dd0eedbbaf3";
+            var bing_key = "640f4ff3f8db4b25922480bbf7fa5a47";
+            var endpoint = "https://menny.cognitiveservices.azure.com/bing/v7.0"
             var start = 0;
             var offset = 10;
+
             function searchFromBing(from, to, query, picSize, callback) {
                 // BING implementation
                 // https://azure.microsoft.com/en-us/try/cognitive-services/
 
-                var bing_url = "https://api.cognitive.microsoft.com/bing/v7.0/images/search?" +
+                var bing_url = endpoint + "/images/search?" +
                     "safeSearch=Strict" +
                     "&Color=Monochrome" +
                     "&size=" + picSize +
